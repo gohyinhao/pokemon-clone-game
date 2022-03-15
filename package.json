@@ -1,0 +1,24 @@
+{
+  "name": "pokemon-clone-game",
+  "version": "1.0.0",
+  "description": "simple pokemon-like game built using canvas",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start:dev": "cd src && live-server --entry-file=index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gohyinhao/pokemon-clone-game.git"
+  },
+  "author": "gohyinhao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gohyinhao/pokemon-clone-game/issues"
+  },
+  "homepage": "https://github.com/gohyinhao/pokemon-clone-game#readme",
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}
