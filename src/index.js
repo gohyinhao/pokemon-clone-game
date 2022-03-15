@@ -128,9 +128,9 @@ function animate() {
   window.requestAnimationFrame(animate);
   background.draw();
   player.draw();
-  boundaries.forEach((boundary) => {
-    boundary.draw();
-  });
+  // boundaries.forEach((boundary) => {
+  //   boundary.draw();
+  // });
   foreground.draw();
 
   const NO_MOVEMENT_RESULT = { direction: 'x', moveOffset: 0 };
