@@ -3,12 +3,16 @@ import { townCollisions } from './data/collisions.js';
 import { battleZonesData } from './data/battleZones.js';
 import {
   BATTLE_TRIGGER_PERCENTAGE,
+  ENEMY_MONSTER_X_OFFSET,
+  ENEMY_MONSTER_Y_OFFSET,
   MAP_WIDTH_TILE_COUNT,
   MOVEMENT_SPEED,
+  OWN_MONSTER_X_OFFSET,
+  OWN_MONSTER_Y_OFFSET,
   PLAYER_AREA_AND_BATTLE_ZONE_OVERLAP_FACTOR,
 } from './constants.js';
 import Boundary from './Boundary.js';
-import Player from './Player.js';
+import Sprite from './Sprite.js';
 import {
   getOverlappingArea,
   hasRectangularCollision,
@@ -22,6 +26,8 @@ import {
   playerLeftImg,
   playerRightImg,
   battleBackgroundImg,
+  draggleImg,
+  embyImg,
 } from './images.js';
 
 /**
@@ -98,7 +104,7 @@ const battleBackground = new Map({
   image: battleBackgroundImg,
   ctx,
 });
-const player = new Player({
+const player = new Sprite({
   ctx,
   position: {
     x: canvas.width / 2 - playerUpImg.width / 8,
@@ -111,6 +117,38 @@ const player = new Player({
     right: playerRightImg,
   },
   numOfFrames: 4,
+});
+const draggle = new Sprite({
+  ctx,
+  position: {
+    x: ENEMY_MONSTER_X_OFFSET,
+    y: ENEMY_MONSTER_Y_OFFSET,
+  },
+  sprites: {
+    up: draggleImg,
+    down: draggleImg,
+    left: draggleImg,
+    right: draggleImg,
+  },
+  numOfFrames: 4,
+  animate: true,
+  animationCycleCount: 30,
+});
+const emby = new Sprite({
+  ctx,
+  position: {
+    x: OWN_MONSTER_X_OFFSET,
+    y: OWN_MONSTER_Y_OFFSET,
+  },
+  sprites: {
+    up: embyImg,
+    down: embyImg,
+    left: embyImg,
+    right: embyImg,
+  },
+  numOfFrames: 4,
+  animate: true,
+  animationCycleCount: 30,
 });
 
 const keys = {
@@ -179,7 +217,7 @@ function animate() {
   player.draw();
   foreground.draw();
 
-  player.moving = false;
+  player.animate = false;
   if (battleState.initiated) {
     return;
   }
@@ -208,7 +246,7 @@ function animate() {
   let movementResult = NO_MOVEMENT_RESULT;
   if (keys.w.pressed && lastKeyPressed === 'w') {
     player.image = player.sprites.up;
-    player.moving = true;
+    player.animate = true;
     movementResult = { direction: 'y', moveOffset: MOVEMENT_SPEED };
     for (const boundary of boundaries) {
       if (
@@ -226,7 +264,7 @@ function animate() {
     }
   } else if (keys.a.pressed && lastKeyPressed === 'a') {
     player.image = player.sprites.left;
-    player.moving = true;
+    player.animate = true;
     movementResult = { direction: 'x', moveOffset: MOVEMENT_SPEED };
     for (const boundary of boundaries) {
       if (
@@ -244,7 +282,7 @@ function animate() {
     }
   } else if (keys.s.pressed && lastKeyPressed === 's') {
     player.image = player.sprites.down;
-    player.moving = true;
+    player.animate = true;
     movementResult = { direction: 'y', moveOffset: -MOVEMENT_SPEED };
     for (const boundary of boundaries) {
       if (
@@ -262,7 +300,7 @@ function animate() {
     }
   } else if (keys.d.pressed && lastKeyPressed === 'd') {
     player.image = player.sprites.right;
-    player.moving = true;
+    player.animate = true;
     movementResult = { direction: 'x', moveOffset: -MOVEMENT_SPEED };
     for (const boundary of boundaries) {
       if (
@@ -288,9 +326,12 @@ function animate() {
     );
   }
 }
-animate();
+// animate();
 
 function animateBattle() {
   window.requestAnimationFrame(animateBattle);
   battleBackground.draw();
+  draggle.draw();
+  emby.draw();
 }
+animateBattle();

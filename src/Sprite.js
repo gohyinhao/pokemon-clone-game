@@ -1,12 +1,18 @@
-class Player {
-  static ANIMATION_CYCLE_COUNT = 10;
-
-  constructor({ ctx, position, numOfFrames, sprites }) {
+class Sprite {
+  constructor({
+    ctx,
+    position,
+    numOfFrames,
+    sprites,
+    animate = false,
+    animationCycleCount = 10,
+  }) {
     this.ctx = ctx;
     this.position = position;
     this.image = sprites.down;
     this.frames = { max: numOfFrames, current: 0, elapsed: 0 };
-    this.moving = false;
+    this.animate = animate;
+    this.animationCycleCount = animationCycleCount;
     this.sprites = sprites;
     this.sprites.down.onload = () => {
       // assumption is that all sprites share same height and width
@@ -30,16 +36,16 @@ class Player {
       this.height,
     );
 
-    if (!this.moving) {
+    if (!this.animate) {
       return;
     }
 
     this.frames.elapsed++;
-    if (this.frames.elapsed === Player.ANIMATION_CYCLE_COUNT) {
+    if (this.frames.elapsed === this.animationCycleCount) {
       this.frames.elapsed = 0;
       this.frames.current = (this.frames.current + 1) % this.frames.max;
     }
   }
 }
 
-export default Player;
+export default Sprite;

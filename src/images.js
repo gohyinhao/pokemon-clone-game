@@ -19,6 +19,12 @@ playerRightImg.src = './assets/playerRight.png';
 const battleBackgroundImg = new Image();
 battleBackgroundImg.src = './assets/battleBackground.png';
 
+const draggleImg = new Image();
+draggleImg.src = './assets/draggleSprite.png';
+
+const embyImg = new Image();
+embyImg.src = './assets/embySprite.png';
+
 export {
   townImg,
   foregroundImg,
@@ -27,4 +33,6 @@ export {
   playerLeftImg,
   playerRightImg,
   battleBackgroundImg,
+  draggleImg,
+  embyImg,
 };
