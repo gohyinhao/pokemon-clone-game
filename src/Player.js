@@ -13,6 +13,7 @@ class Player {
       // else will not work as intended
       this.width = this.image.width / numOfFrames;
       this.height = this.image.height;
+      this.area = this.width * this.height;
     };
   }
 

@@ -16,6 +16,9 @@ playerLeftImg.src = './assets/playerLeft.png';
 const playerRightImg = new Image();
 playerRightImg.src = './assets/playerRight.png';
 
+const battleBackgroundImg = new Image();
+battleBackgroundImg.src = './assets/battleBackground.png';
+
 export {
   townImg,
   foregroundImg,
@@ -23,4 +26,5 @@ export {
   playerDownImg,
   playerLeftImg,
   playerRightImg,
+  battleBackgroundImg,
 };

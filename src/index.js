@@ -1,9 +1,19 @@
 import Map from './Map.js';
 import { townCollisions } from './data/collisions.js';
-import { MAP_WIDTH_TILE_COUNT, MOVEMENT_SPEED } from './constants.js';
+import { battleZonesData } from './data/battleZones.js';
+import {
+  BATTLE_TRIGGER_PERCENTAGE,
+  MAP_WIDTH_TILE_COUNT,
+  MOVEMENT_SPEED,
+  PLAYER_AREA_AND_BATTLE_ZONE_OVERLAP_FACTOR,
+} from './constants.js';
 import Boundary from './Boundary.js';
 import Player from './Player.js';
-import { hasRectangularCollision } from './utils.js';
+import {
+  getOverlappingArea,
+  hasRectangularCollision,
+  triggerBattleFlashAnimation,
+} from './utils.js';
 import {
   townImg,
   foregroundImg,
@@ -11,6 +21,7 @@ import {
   playerDownImg,
   playerLeftImg,
   playerRightImg,
+  battleBackgroundImg,
 } from './images.js';
 
 /**
@@ -21,6 +32,33 @@ const ctx = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
+// map offset to position player initial starting point
+const mapOffset = { x: -500, y: -380 };
+
+/**
+ * BATTLE ZONE LOGIC
+ */
+const battleZonesMap = [];
+for (let i = 0; i < battleZonesData.length; i += MAP_WIDTH_TILE_COUNT) {
+  battleZonesMap.push(battleZonesData.slice(i, i + MAP_WIDTH_TILE_COUNT));
+}
+const battleZones = [];
+battleZonesMap.forEach((row, rowIndex) => {
+  row.forEach((symbol, colIndex) => {
+    if (symbol) {
+      battleZones.push(
+        new Boundary({
+          ctx,
+          position: {
+            x: colIndex * Boundary.width + mapOffset.x,
+            y: rowIndex * Boundary.height + mapOffset.y,
+          },
+        }),
+      );
+    }
+  });
+});
+
 /**
  * BOUNDARY LOGIC
  */
@@ -28,9 +66,7 @@ const townCollisionsMap = [];
 for (let i = 0; i < townCollisions.length; i += MAP_WIDTH_TILE_COUNT) {
   townCollisionsMap.push(townCollisions.slice(i, i + MAP_WIDTH_TILE_COUNT));
 }
-
 const boundaries = [];
-const mapOffset = { x: -500, y: -380 };
 townCollisionsMap.forEach((row, rowIndex) => {
   row.forEach((symbol, colIndex) => {
     if (symbol) {
@@ -55,6 +91,11 @@ const background = new Map({
 const foreground = new Map({
   position: { x: mapOffset.x, y: mapOffset.y },
   image: foregroundImg,
+  ctx,
+});
+const battleBackground = new Map({
+  position: { x: 0, y: 0 },
+  image: battleBackgroundImg,
   ctx,
 });
 const player = new Player({
@@ -122,20 +163,49 @@ window.addEventListener('keyup', (e) => {
   }
 });
 
-const movableObjects = [background, foreground, ...boundaries];
+const movableObjects = [background, foreground, ...boundaries, ...battleZones];
+
+const battleState = {
+  initiated: false,
+};
 
 function animate() {
-  window.requestAnimationFrame(animate);
+  const animationId = window.requestAnimationFrame(animate);
   background.draw();
-  player.draw();
   // boundaries.forEach((boundary) => {
   //   boundary.draw();
   // });
+  // battleZones.forEach((zone) => zone.draw());
+  player.draw();
   foreground.draw();
+
+  player.moving = false;
+  if (battleState.initiated) {
+    return;
+  }
+
+  /**
+   * check if battle should be activated
+   */
+  if (keys.w.pressed || keys.a.pressed || keys.s.pressed || keys.d.pressed) {
+    for (const battleZone of battleZones) {
+      if (
+        hasRectangularCollision(player, battleZone) &&
+        getOverlappingArea(player, battleZone) >
+          player.area * PLAYER_AREA_AND_BATTLE_ZONE_OVERLAP_FACTOR &&
+        Math.random() < BATTLE_TRIGGER_PERCENTAGE
+      ) {
+        window.cancelAnimationFrame(animationId);
+
+        battleState.initiated = true;
+        triggerBattleFlashAnimation(animateBattle);
+        break;
+      }
+    }
+  }
 
   const NO_MOVEMENT_RESULT = { direction: 'x', moveOffset: 0 };
   let movementResult = NO_MOVEMENT_RESULT;
-  player.moving = false;
   if (keys.w.pressed && lastKeyPressed === 'w') {
     player.image = player.sprites.up;
     player.moving = true;
@@ -219,3 +289,8 @@ function animate() {
   }
 }
 animate();
+
+function animateBattle() {
+  window.requestAnimationFrame(animateBattle);
+  battleBackground.draw();
+}
