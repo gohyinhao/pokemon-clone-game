@@ -1,7 +1,11 @@
 import Sprite from './Sprite.js';
 import { TACKLE_MOVEMENT_DIST } from './constants.js';
 import { fireballImg } from './images.js';
-import { getAttackMoveDialogue, triggerGetHitAnimation } from './utils.js';
+import {
+  getAttackMoveDialogue,
+  getFaintDialogue,
+  triggerGetHitAnimation,
+} from './utils.js';
 
 class Monster extends Sprite {
   constructor({ name, isEnemy = false, attacks, ...attributes }) {
@@ -67,6 +71,19 @@ class Monster extends Sprite {
         });
         break;
     }
+  }
+
+  faint() {
+    const dialogueBox = document.querySelector('#dialogue-box');
+    dialogueBox.innerHTML = getFaintDialogue(this.name);
+    dialogueBox.style.display = 'block';
+
+    gsap.to(this.position, {
+      y: this.position.y + 20,
+    });
+    gsap.to(this, {
+      opacity: 0,
+    });
   }
 }
 

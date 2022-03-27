@@ -95,6 +95,10 @@ export const getAttackMoveDialogue = (monsterName, attackName) => {
   return `${monsterName} used ${attackName}`;
 };
 
+export const getFaintDialogue = (monsterName) => {
+  return `${monsterName} fainted!`;
+};
+
 /**
  * get random int from 0 to max number (exclusive)
  */

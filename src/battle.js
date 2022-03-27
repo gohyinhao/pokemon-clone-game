@@ -41,13 +41,21 @@ document
         renderedSprites,
       });
 
-      battleQueue.push(() =>
-        draggle.attack({
-          attack: getRandomItemFromArray(draggle.attacks),
-          recipient: emby,
-          renderedSprites,
-        }),
-      );
+      if (draggle.health > 0) {
+        const randomEnemyAttack = getRandomItemFromArray(draggle.attacks);
+        battleQueue.push(() =>
+          draggle.attack({
+            attack: randomEnemyAttack,
+            recipient: emby,
+            renderedSprites,
+          }),
+        );
+        if (emby.health - randomEnemyAttack.damage <= 0) {
+          battleQueue.push(() => emby.faint());
+        }
+      } else {
+        battleQueue.push(() => draggle.faint());
+      }
     });
 
     button.addEventListener('mouseenter', (e) => {
