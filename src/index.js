@@ -29,6 +29,7 @@ import {
   draggleImg,
   embyImg,
 } from './images.js';
+import { attacks } from './data/attacks.js';
 
 /**
  * INIT
@@ -131,6 +132,7 @@ const draggle = new Sprite({
     right: draggleImg,
   },
   numOfFrames: 4,
+  isEnemy: true,
   animate: true,
   animationCycleCount: 30,
 });
@@ -147,6 +149,7 @@ const emby = new Sprite({
     right: embyImg,
   },
   numOfFrames: 4,
+  isEnemy: false,
   animate: true,
   animationCycleCount: 30,
 });
@@ -328,10 +331,25 @@ function animate() {
 }
 // animate();
 
+const renderedSprites = [draggle, emby];
 function animateBattle() {
   window.requestAnimationFrame(animateBattle);
   battleBackground.draw();
-  draggle.draw();
-  emby.draw();
+
+  renderedSprites.forEach((sprite) => sprite.draw());
 }
 animateBattle();
+
+document
+  .querySelectorAll('.attack-command-container>button')
+  .forEach((button) => {
+    button.addEventListener('click', (e) => {
+      const selectedButton = e.currentTarget;
+      const attackObj = attacks[selectedButton.innerHTML];
+      emby.attack({
+        attack: attackObj,
+        recipient: draggle,
+        renderedSprites,
+      });
+    });
+  });

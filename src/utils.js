@@ -70,3 +70,23 @@ export const triggerBattleFlashAnimation = (animateBattleFunc) => {
     },
   });
 };
+
+export const triggerGetHitAnimation = (healthBarId, recipient) => {
+  gsap.to(healthBarId, {
+    width: recipient.health + '%',
+  });
+
+  gsap.to(recipient.position, {
+    x: recipient.position.x + 10,
+    repeat: 5,
+    yoyo: true,
+    duration: 0.08,
+  });
+
+  gsap.to(recipient, {
+    opacity: 0,
+    repeat: 5,
+    yoyo: true,
+    duration: 0.08,
+  });
+};

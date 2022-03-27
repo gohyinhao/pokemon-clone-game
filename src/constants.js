@@ -24,3 +24,4 @@ export const OWN_MONSTER_X_OFFSET = 280;
 export const OWN_MONSTER_Y_OFFSET = 325;
 export const ENEMY_MONSTER_X_OFFSET = 800;
 export const ENEMY_MONSTER_Y_OFFSET = 100;
+export const TACKLE_MOVEMENT_DIST = 20;
