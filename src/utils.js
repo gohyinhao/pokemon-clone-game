@@ -49,7 +49,10 @@ export const getOverlappingArea = (rect1, rect2) => {
   return overlappingAreaWidth * overlappingAreaHeight;
 };
 
-export const triggerBattleFlashAnimation = (animateBattleFunc) => {
+export const triggerBattleFlashAnimation = (
+  initBattleFunc,
+  animateBattleFunc,
+) => {
   gsap.to('#battle-flash', {
     opacity: 1,
     repeat: BATTLE_FLASH_REPEAT,
@@ -60,12 +63,32 @@ export const triggerBattleFlashAnimation = (animateBattleFunc) => {
         opacity: 1,
         duration: BATTLE_FLASH_DURATION,
         onComplete() {
+          initBattleFunc();
           animateBattleFunc();
           gsap.to('#battle-flash', {
             opacity: 0,
             duration: BATTLE_FLASH_DURATION,
           });
         },
+      });
+    },
+  });
+};
+
+export const triggerBattleEndAnimation = (
+  cancelBattleFunc,
+  initMapFunc,
+  animateMapFunc,
+) => {
+  gsap.to('#battle-flash', {
+    opacity: 1,
+    onComplete() {
+      cancelBattleFunc();
+      initMapFunc();
+      animateMapFunc();
+      document.querySelector('#battle-interface').style.display = 'none';
+      gsap.to('#battle-flash', {
+        opacity: 0,
       });
     },
   });

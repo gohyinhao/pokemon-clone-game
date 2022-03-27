@@ -21,7 +21,7 @@ import {
   playerLeftImg,
   playerRightImg,
 } from './images.js';
-import { animateBattle } from './battle.js';
+import { initBattle, animateBattle } from './battle.js';
 import Player from './Player.js';
 
 /**
@@ -154,11 +154,17 @@ window.addEventListener('keyup', (e) => {
 
 const movableObjects = [background, foreground, ...boundaries, ...battleZones];
 
-const battleState = {
+let battleState = {
   initiated: false,
 };
 
-function animate() {
+export function initMap() {
+  battleState = {
+    initiated: false,
+  };
+}
+
+export function animate() {
   const animationId = window.requestAnimationFrame(animate);
   background.draw();
   // boundaries.forEach((boundary) => {
@@ -187,7 +193,7 @@ function animate() {
         window.cancelAnimationFrame(animationId);
 
         battleState.initiated = true;
-        triggerBattleFlashAnimation(animateBattle);
+        triggerBattleFlashAnimation(initBattle, animateBattle);
         break;
       }
     }
@@ -278,4 +284,5 @@ function animate() {
   }
 }
 // animate();
+initBattle();
 animateBattle();
