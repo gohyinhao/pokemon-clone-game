@@ -26,8 +26,8 @@ export function initBattle() {
   document.querySelector('#player-health-bar').style.width = '100%';
   document.querySelector('#enemy-health-bar').style.width = '100%';
 
-  draggle = new Monster(monsters.Draggle);
-  emby = new Monster(monsters.Emby);
+  draggle = new Monster(_.cloneDeep(monsters.Draggle));
+  emby = new Monster(_.cloneDeep(monsters.Emby));
   renderedSprites = [draggle, emby];
   battleQueue = [];
 

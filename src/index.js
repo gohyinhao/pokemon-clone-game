@@ -33,6 +33,14 @@ export const ctx = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
+let initialTriggerForAudio = false;
+window.addEventListener('click', () => {
+  if (!initialTriggerForAudio) {
+    audio.map.play();
+    initialTriggerForAudio = true;
+  }
+});
+
 // map offset to position player initial starting point
 const mapOffset = { x: -500, y: -380 };
 
@@ -120,6 +128,11 @@ const keys = {
 
 let lastKeyPressed = '';
 window.addEventListener('keydown', (e) => {
+  if (!initialTriggerForAudio) {
+    audio.map.play();
+    initialTriggerForAudio = true;
+  }
+
   switch (e.key) {
     case 'w':
       keys.w.pressed = true;
@@ -295,11 +308,3 @@ export function animate() {
   }
 }
 animate();
-
-let initialClick = false;
-window.addEventListener('click', () => {
-  if (!initialClick) {
-    audio.map.play();
-    initialClick = true;
-  }
-});
