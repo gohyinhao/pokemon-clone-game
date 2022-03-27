@@ -1,10 +1,10 @@
 import { TACKLE_MOVEMENT_DIST } from './constants.js';
 import { fireballImg } from './images.js';
-import { triggerGetHitAnimation } from './utils.js';
+import { getAttackMoveDialogue, triggerGetHitAnimation } from './utils.js';
+import { ctx } from './index.js';
 
 class Sprite {
   constructor({
-    ctx,
     position,
     numOfFrames,
     sprites,
@@ -12,8 +12,8 @@ class Sprite {
     animate = false,
     animationCycleCount = 10,
     rotation = 0,
+    name,
   }) {
-    this.ctx = ctx;
     this.position = position;
     this.image = sprites.down;
     this.frames = { max: numOfFrames, current: 0, elapsed: 0 };
@@ -24,6 +24,7 @@ class Sprite {
     this.health = 100;
     this.isEnemy = isEnemy;
     this.rotation = rotation;
+    this.name = name;
 
     // assumption is that all sprites share same height and width
     // else will not work as intended
@@ -33,18 +34,18 @@ class Sprite {
   }
 
   draw() {
-    this.ctx.save();
-    this.ctx.translate(
+    ctx.save();
+    ctx.translate(
       this.position.x + this.width / 2,
       this.position.y + this.height / 2,
     );
-    this.ctx.rotate(this.rotation);
-    this.ctx.translate(
+    ctx.rotate(this.rotation);
+    ctx.translate(
       -this.position.x - this.width / 2,
       -this.position.y - this.height / 2,
     );
-    this.ctx.globalAlpha = this.opacity;
-    this.ctx.drawImage(
+    ctx.globalAlpha = this.opacity;
+    ctx.drawImage(
       this.image,
       this.frames.current * this.width,
       0,
@@ -55,7 +56,7 @@ class Sprite {
       this.width,
       this.height,
     );
-    this.ctx.restore();
+    ctx.restore();
 
     if (!this.animate) {
       return;
@@ -69,6 +70,10 @@ class Sprite {
   }
 
   attack({ attack, recipient, renderedSprites }) {
+    const dialogueBox = document.querySelector('#dialogue-box');
+    dialogueBox.innerHTML = getAttackMoveDialogue(this.name, attack.name);
+    dialogueBox.style.display = 'block';
+
     const targetHealthBarId = this.isEnemy
       ? '#player-health-bar'
       : '#enemy-health-bar';
@@ -97,7 +102,6 @@ class Sprite {
         break;
       case 'Fireball':
         const fireball = new Sprite({
-          ctx: this.ctx,
           position: {
             x: this.position.x,
             y: this.position.y,

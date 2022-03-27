@@ -90,3 +90,7 @@ export const triggerGetHitAnimation = (healthBarId, recipient) => {
     duration: 0.08,
   });
 };
+
+export const getAttackMoveDialogue = (monsterName, attackName) => {
+  return `${monsterName} used ${attackName}`;
+};

@@ -3,12 +3,8 @@ import { townCollisions } from './data/collisions.js';
 import { battleZonesData } from './data/battleZones.js';
 import {
   BATTLE_TRIGGER_PERCENTAGE,
-  ENEMY_MONSTER_X_OFFSET,
-  ENEMY_MONSTER_Y_OFFSET,
   MAP_WIDTH_TILE_COUNT,
   MOVEMENT_SPEED,
-  OWN_MONSTER_X_OFFSET,
-  OWN_MONSTER_Y_OFFSET,
   PLAYER_AREA_AND_BATTLE_ZONE_OVERLAP_FACTOR,
 } from './constants.js';
 import Boundary from './Boundary.js';
@@ -25,17 +21,14 @@ import {
   playerDownImg,
   playerLeftImg,
   playerRightImg,
-  battleBackgroundImg,
-  draggleImg,
-  embyImg,
 } from './images.js';
-import { attacks } from './data/attacks.js';
+import { animateBattle } from './battle.js';
 
 /**
  * INIT
  */
 const canvas = document.querySelector('canvas');
-const ctx = canvas.getContext('2d');
+export const ctx = canvas.getContext('2d');
 canvas.width = 1024;
 canvas.height = 576;
 
@@ -55,7 +48,6 @@ battleZonesMap.forEach((row, rowIndex) => {
     if (symbol) {
       battleZones.push(
         new Boundary({
-          ctx,
           position: {
             x: colIndex * Boundary.width + mapOffset.x,
             y: rowIndex * Boundary.height + mapOffset.y,
@@ -79,7 +71,6 @@ townCollisionsMap.forEach((row, rowIndex) => {
     if (symbol) {
       boundaries.push(
         new Boundary({
-          ctx,
           position: {
             x: colIndex * Boundary.width + mapOffset.x,
             y: rowIndex * Boundary.height + mapOffset.y,
@@ -93,20 +84,12 @@ townCollisionsMap.forEach((row, rowIndex) => {
 const background = new Map({
   position: { x: mapOffset.x, y: mapOffset.y },
   image: townImg,
-  ctx,
 });
 const foreground = new Map({
   position: { x: mapOffset.x, y: mapOffset.y },
   image: foregroundImg,
-  ctx,
-});
-const battleBackground = new Map({
-  position: { x: 0, y: 0 },
-  image: battleBackgroundImg,
-  ctx,
 });
 const player = new Sprite({
-  ctx,
   position: {
     x: canvas.width / 2 - playerUpImg.width / 8,
     y: canvas.height / 2 - playerUpImg.height / 2,
@@ -119,41 +102,6 @@ const player = new Sprite({
   },
   numOfFrames: 4,
 });
-const draggle = new Sprite({
-  ctx,
-  position: {
-    x: ENEMY_MONSTER_X_OFFSET,
-    y: ENEMY_MONSTER_Y_OFFSET,
-  },
-  sprites: {
-    up: draggleImg,
-    down: draggleImg,
-    left: draggleImg,
-    right: draggleImg,
-  },
-  numOfFrames: 4,
-  isEnemy: true,
-  animate: true,
-  animationCycleCount: 30,
-});
-const emby = new Sprite({
-  ctx,
-  position: {
-    x: OWN_MONSTER_X_OFFSET,
-    y: OWN_MONSTER_Y_OFFSET,
-  },
-  sprites: {
-    up: embyImg,
-    down: embyImg,
-    left: embyImg,
-    right: embyImg,
-  },
-  numOfFrames: 4,
-  isEnemy: false,
-  animate: true,
-  animationCycleCount: 30,
-});
-
 const keys = {
   w: {
     pressed: false,
@@ -330,26 +278,4 @@ function animate() {
   }
 }
 // animate();
-
-const renderedSprites = [draggle, emby];
-function animateBattle() {
-  window.requestAnimationFrame(animateBattle);
-  battleBackground.draw();
-
-  renderedSprites.forEach((sprite) => sprite.draw());
-}
 animateBattle();
-
-document
-  .querySelectorAll('.attack-command-container>button')
-  .forEach((button) => {
-    button.addEventListener('click', (e) => {
-      const selectedButton = e.currentTarget;
-      const attackObj = attacks[selectedButton.innerHTML];
-      emby.attack({
-        attack: attackObj,
-        recipient: draggle,
-        renderedSprites,
-      });
-    });
-  });
