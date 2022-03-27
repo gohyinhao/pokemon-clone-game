@@ -50,6 +50,7 @@ export const getOverlappingArea = (rect1, rect2) => {
 };
 
 export const triggerBattleFlashAnimation = (
+  cancelMapFunc,
   initBattleFunc,
   animateBattleFunc,
 ) => {
@@ -63,6 +64,7 @@ export const triggerBattleFlashAnimation = (
         opacity: 1,
         duration: BATTLE_FLASH_DURATION,
         onComplete() {
+          cancelMapFunc();
           initBattleFunc();
           animateBattleFunc();
           gsap.to('#battle-flash', {

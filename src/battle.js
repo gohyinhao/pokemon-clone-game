@@ -3,6 +3,7 @@ import Monster from './Monster.js';
 import { battleBackgroundImg } from './images.js';
 import { attacks } from './data/attacks.js';
 import { monsters } from './data/monsters.js';
+import { audio } from './data/audio.js';
 import { getRandomItemFromArray, triggerBattleEndAnimation } from './utils.js';
 import { animate, initMap } from './index.js';
 
@@ -18,6 +19,8 @@ let renderedSprites = [];
 let battleQueue = [];
 
 export function initBattle() {
+  audio.battle.play();
+
   document.querySelector('#battle-interface').style.display = 'block';
   document.querySelector('#dialogue-box').style.display = 'none';
   document.querySelector('#player-health-bar').style.width = '100%';
@@ -98,9 +101,10 @@ export function animateBattle() {
   renderedSprites.forEach((sprite) => sprite.draw());
 }
 
-const cancelBattleAnimation = () => {
+export function cancelBattleAnimation() {
   window.cancelAnimationFrame(battleAnimationId);
-};
+  audio.battle.stop();
+}
 
 document.querySelector('#dialogue-box').addEventListener('click', (e) => {
   if (battleQueue.length > 0) {

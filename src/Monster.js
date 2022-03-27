@@ -1,4 +1,5 @@
 import Sprite from './Sprite.js';
+import { audio } from './data/audio.js';
 import { TACKLE_MOVEMENT_DIST } from './constants.js';
 import { fireballImg } from './images.js';
 import {
@@ -40,6 +41,7 @@ class Monster extends Sprite {
             x: this.position.x + movementDist * 2,
             duration: 0.1,
             onComplete: () => {
+              audio.tackleHit.play();
               triggerGetHitAnimation(targetHealthBarId, recipient);
             },
           })
@@ -60,11 +62,13 @@ class Monster extends Sprite {
           rotation: this.isEnemy ? -2.5 : 1,
         });
 
+        audio.initFireball.play();
         renderedSprites.splice(1, 0, fireball);
         gsap.to(fireball.position, {
           x: recipient.position.x,
           y: recipient.position.y,
           onComplete: () => {
+            audio.fireballHit.play();
             renderedSprites.splice(1, 1);
             triggerGetHitAnimation(targetHealthBarId, recipient);
           },
@@ -84,6 +88,11 @@ class Monster extends Sprite {
     gsap.to(this, {
       opacity: 0,
     });
+    if (this.isEnemy) {
+      audio.victory.play();
+    } else {
+      audio.gameOver.play();
+    }
   }
 }
 

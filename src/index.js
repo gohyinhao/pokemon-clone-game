@@ -1,6 +1,7 @@
 import Map from './Map.js';
 import { townCollisions } from './data/collisions.js';
 import { battleZonesData } from './data/battleZones.js';
+import { audio } from './data/audio.js';
 import {
   BATTLE_TRIGGER_PERCENTAGE,
   MAP_WIDTH_TILE_COUNT,
@@ -157,15 +158,22 @@ const movableObjects = [background, foreground, ...boundaries, ...battleZones];
 let battleState = {
   initiated: false,
 };
+let mapAnimationId;
+
+export function cancelMapAnimation() {
+  window.cancelAnimationFrame(mapAnimationId);
+  audio.map.stop();
+}
 
 export function initMap() {
   battleState = {
     initiated: false,
   };
+  audio.map.play();
 }
 
 export function animate() {
-  const animationId = window.requestAnimationFrame(animate);
+  mapAnimationId = window.requestAnimationFrame(animate);
   background.draw();
   // boundaries.forEach((boundary) => {
   //   boundary.draw();
@@ -190,10 +198,13 @@ export function animate() {
           player.area * PLAYER_AREA_AND_BATTLE_ZONE_OVERLAP_FACTOR &&
         Math.random() < BATTLE_TRIGGER_PERCENTAGE
       ) {
-        window.cancelAnimationFrame(animationId);
-
         battleState.initiated = true;
-        triggerBattleFlashAnimation(initBattle, animateBattle);
+        audio.initBattle.play();
+        triggerBattleFlashAnimation(
+          cancelMapAnimation,
+          initBattle,
+          animateBattle,
+        );
         break;
       }
     }
@@ -283,6 +294,12 @@ export function animate() {
     );
   }
 }
-// animate();
-initBattle();
-animateBattle();
+animate();
+
+let initialClick = false;
+window.addEventListener('click', () => {
+  if (!initialClick) {
+    audio.map.play();
+    initialClick = true;
+  }
+});
