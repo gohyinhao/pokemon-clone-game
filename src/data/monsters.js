@@ -32,6 +32,6 @@ export const monsters = {
     animate: true,
     animationCycleCount: 30,
     name: 'Draggle',
-    attacks: [attacks.Tackle, attacks.Fireball],
+    attacks: [attacks.Tackle],
   },
 };

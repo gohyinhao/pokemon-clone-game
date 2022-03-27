@@ -12,8 +12,11 @@ const draggle = new Monster(monsters.Draggle);
 const emby = new Monster(monsters.Emby);
 
 const attackCommands = document.querySelector('#attack-command-container');
-const button = document.createElement('button');
-button.innerHTML = 'Fireball';
+emby.attacks.forEach((attack) => {
+  const button = document.createElement('button');
+  button.innerHTML = attack.name;
+  attackCommands.append(button);
+});
 
 const renderedSprites = [draggle, emby];
 export function animateBattle() {

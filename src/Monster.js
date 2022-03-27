@@ -4,11 +4,12 @@ import { fireballImg } from './images.js';
 import { getAttackMoveDialogue, triggerGetHitAnimation } from './utils.js';
 
 class Monster extends Sprite {
-  constructor({ name, isEnemy = false, ...attributes }) {
+  constructor({ name, isEnemy = false, attacks, ...attributes }) {
     super(attributes);
     this.name = name;
     this.health = 100;
     this.isEnemy = isEnemy;
+    this.attacks = attacks;
   }
 
   attack({ attack, recipient, renderedSprites }) {
@@ -48,12 +49,7 @@ class Monster extends Sprite {
             x: this.position.x,
             y: this.position.y,
           },
-          sprites: {
-            up: fireballImg,
-            down: fireballImg,
-            left: fireballImg,
-            right: fireballImg,
-          },
+          image: fireballImg,
           numOfFrames: 4,
           animate: true,
           animationCycleCount: 10,
