@@ -34,7 +34,7 @@ export const audio = {
   victory: new Howl({
     src: '../assets/audio/victory.wav',
     html5: true,
-    volume: 1,
+    volume: 0.8,
   }),
   gameOver: new Howl({
     src: '../assets/audio/gameOver.wav',
