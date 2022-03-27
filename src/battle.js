@@ -3,6 +3,7 @@ import Monster from './Monster.js';
 import { battleBackgroundImg } from './images.js';
 import { attacks } from './data/attacks.js';
 import { monsters } from './data/monsters.js';
+import { getRandomItemFromArray } from './utils.js';
 
 const battleBackground = new Map({
   position: { x: 0, y: 0 },
@@ -42,7 +43,7 @@ document
 
       battleQueue.push(() =>
         draggle.attack({
-          attack: attacks.Tackle,
+          attack: getRandomItemFromArray(draggle.attacks),
           recipient: emby,
           renderedSprites,
         }),

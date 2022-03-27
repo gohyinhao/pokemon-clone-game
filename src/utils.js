@@ -94,3 +94,14 @@ export const triggerGetHitAnimation = (healthBarId, recipient) => {
 export const getAttackMoveDialogue = (monsterName, attackName) => {
   return `${monsterName} used ${attackName}`;
 };
+
+/**
+ * get random int from 0 to max number (exclusive)
+ */
+export const getRandomInt = (maxNumber) => {
+  return Math.floor(Math.random() * maxNumber);
+};
+
+export const getRandomItemFromArray = (arr) => {
+  return arr[getRandomInt(arr.length)];
+};
