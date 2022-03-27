@@ -49,6 +49,20 @@ document
         }),
       );
     });
+
+    button.addEventListener('mouseenter', (e) => {
+      const selectedButton = e.currentTarget;
+      const selectedAttack = attacks[selectedButton.innerHTML];
+      const attackTypeContainer = document.querySelector('#attack-type');
+      attackTypeContainer.innerHTML = selectedAttack.type;
+      attackTypeContainer.style.color = selectedAttack.color;
+    });
+
+    button.addEventListener('mouseleave', () => {
+      const attackTypeContainer = document.querySelector('#attack-type');
+      attackTypeContainer.innerHTML = 'Attack Type';
+      attackTypeContainer.style.color = 'black';
+    });
   });
 
 document.querySelector('#dialogue-box').addEventListener('click', (e) => {
