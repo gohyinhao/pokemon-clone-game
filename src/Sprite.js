@@ -11,6 +11,7 @@ class Sprite {
   }) {
     this.position = position;
     this.image = image;
+    this.image.src = image.src;
     this.frames = { max: numOfFrames, current: 0, elapsed: 0 };
     this.animate = animate;
     this.animationCycleCount = animationCycleCount;
@@ -19,9 +20,11 @@ class Sprite {
 
     // assumption is that all sprites share same height and width
     // else will not work as intended
-    this.width = this.image.width / numOfFrames;
-    this.height = this.image.height;
-    this.area = this.width * this.height;
+    this.image.onload = () => {
+      this.width = this.image.width / numOfFrames;
+      this.height = this.image.height;
+      this.area = this.width * this.height;
+    };
   }
 
   draw() {
