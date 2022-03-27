@@ -8,7 +8,6 @@ import {
   PLAYER_AREA_AND_BATTLE_ZONE_OVERLAP_FACTOR,
 } from './constants.js';
 import Boundary from './Boundary.js';
-import Sprite from './Sprite.js';
 import {
   getOverlappingArea,
   hasRectangularCollision,
@@ -23,6 +22,7 @@ import {
   playerRightImg,
 } from './images.js';
 import { animateBattle } from './battle.js';
+import Player from './Player.js';
 
 /**
  * INIT
@@ -89,7 +89,7 @@ const foreground = new Map({
   position: { x: mapOffset.x, y: mapOffset.y },
   image: foregroundImg,
 });
-const player = new Sprite({
+const player = new Player({
   position: {
     x: canvas.width / 2 - playerUpImg.width / 8,
     y: canvas.height / 2 - playerUpImg.height / 2,
